@@ -1,3 +1,5 @@
+## 前言
+推荐在linux虚拟机下测试，windows下或许会出现未知错误
 ## 发送端说明
 发送端主要实现以下几点功能：
 - 读取一个文件并将该文件通过UDP套接字发给指定的接收端
@@ -11,20 +13,24 @@
 - 失序：数据包到达接收端的顺序是任意的
 - 重复：数据包可能会重复发送给接收端
 发送端通过以下命令调用：
+```bash
 Python Sender.py -f <input file>
+```
 关于发送端的其他注意事项：
-- 发送端应当设置一个500ms的重传计时器，对于超过500ms但是仍未收到确认消息的数据包，应当进行重传
-- 发送端应当设置一个大小为5的发送窗口
-- 发送端应当可以支持任意类型的文件（即可以发送图片/视频文件等等）
+- 发送端设置了一个500ms的重传计时器，对于超过500ms但是仍未收到确认消息的数据包，应当进行重传
+- 发送端设置了一个大小为5的发送窗口
+- 发送端可以支持任意类型的文件（即可以发送图片（pic_test.jpeg）/视频文件（turn-on-off.mp4）等等）
 在此原代码基础上实现Go-Back-N算法和Selective Acknowledgements（选择重传）。
 ## 测试
 TestHarness.py提供了一个测试框架（通过python TestHarness.py -s YourSender.py -r Receiver.py调用），tests目录下是具体的测试用例。
 编写完测试用例后，需要在TestHarness.py中的tests_to_run函数中加入该测试用例，然后才能通过调用TestHarness运行该用例。
 目前的测试用例包含了模拟丢包、失序和重复以及以上复合并传输多媒体格式的测试用例。
-每种测试条件（丢包、失序、重复）写了两个测试类，分别用来测Go-Back-N和选择重传。
+每种测试条件（丢包、失序、重复、混合）写了两个测试类，分别用来测Go-Back-N和选择重传。
 
 测试执行
+```bash
 python TestHarness.py -s Sender.py -r Receiver.py
+```
 
 ## 源文档
 In this folder you'll find the sample receiver, code for computing and
